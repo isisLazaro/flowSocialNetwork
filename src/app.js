@@ -1,17 +1,19 @@
 "use strict";
 
-import Navbar from './modules/navbar.js'
+import Navbar from './page/element/navbar.js'
 
-import Home     from './modules/home.js'
-import Register from './modules/register.js'
-import Error404 from './modules/error.js'
+import Home     from './page/home.js'
+import Login    from './page/login.js'
+import Register from './page/register.js'
+import Error404 from './page/error.js'
 
-import Utils from './modules/utils.js'
+import Utils from './lib/utils.js'
 
 // List of supported routes. 
 // Any url other than these routes will throw a 404 error
 const routes = {
     '/'          : Home
+    ,'/login'    : Login
     ,'/register' : Register
 };
 
@@ -28,14 +30,14 @@ const router = async () => { // function always returns a promise
     
     // Get the page from the hash of supported routes.
     let request = Utils.parseRequestURL();
-    console.log(request);
+    //console.log(request);
     
     // Parse the URL and if it has an id part, change it with the string ":id"
     // condition ? exprIfTrue : exprIfFalse 
     let parsedURL = (request.resource ? '/' + request.resource : '/') 
         + (request.id ? '/:id' : '') 
         + (request.verb ? '/' + request.verb : '');
-        console.log(parsedURL);
+        //console.log(parsedURL);
     // Get the page from our hash of supported routes.
     // If the parsed URL is not in our list of supported routes, select the 404 page instead
     let page = routes[parsedURL] ? routes[parsedURL] : Error404; 

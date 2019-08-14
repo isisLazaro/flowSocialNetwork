@@ -4,7 +4,7 @@ const Utils = {
     // --------------------------------
     parseRequestURL : () => {   
         let url = location.hash.slice(1).toLowerCase() || '/'; // If expr1 can be converted to true, returns expr1; else, returns expr2.
-        console.log(`utils: ${location}, ${location.hash}, ${location.hash.slice(1)}`);       
+        //console.log(`utils: ${location}, ${location.hash}, ${location.hash.slice(1)}`);       
         let r = url.split("/")
        // console.log(url);console.log(r);
         let request = {
