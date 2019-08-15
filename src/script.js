@@ -9,6 +9,8 @@ const firebaseConfig = {
 };
 // Initialize firebase
 firebase.initializeApp(firebaseConfig);
+// Initialize Cloud Firestore through Firebase
+let db = firebase.firestore();
 
 /*  firebase.auth().onAuthStateChanged(user => {
     console.log(window.user);

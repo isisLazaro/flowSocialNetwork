@@ -5,6 +5,10 @@ import Navbar from './page/element/navbar.js'
 import Home     from './page/home.js'
 import Login    from './page/login.js'
 import Register from './page/register.js'
+
+import UserProfile from './page/userProfile.js'
+import UserHome from './page/userHome.js'
+
 import Error404 from './page/error.js'
 
 import Utils from './lib/utils.js'
@@ -15,10 +19,32 @@ const routes = {
     '/'          : Home
     ,'/login'    : Login
     ,'/register' : Register
+    ,'/userprofile' : UserProfile
+    ,'/userhome' : UserHome
 };
 
 // Router takes a URL, checks against the list of supported routes and then renders the corresponding content page
 const router = async () => { // function always returns a promise
+
+    firebase.auth().onAuthStateChanged(user => {
+        console.log(window.user);
+        if (user) {
+            // User is signed in.
+            console.log("User is signed in");
+            const displayName = user.displayName;
+            const email = user.email;
+            // const emailVerified = user.emailVerified;
+            const photoURL = user.photoURL;
+            // const isAnonymous = user.isAnonymous;
+            const uid = user.uid;
+            const providerData = user.providerData;
+            console.log(`name: ${displayName}, email: ${email}, photo: ${photoURL}, uid: ${uid}, provider: ${providerData}`);
+        } else {
+            // No user is signed in.
+            console.log("No user is signed in");
+            
+        }
+    });
 
     // load view element
     const header  = document.getElementById('header-container'); 
