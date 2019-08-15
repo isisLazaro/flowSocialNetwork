@@ -3,8 +3,14 @@ const Register = {
         const view = /*html*/ `
             <h1>REGISTRO</h1>
             <form name = "formRegister">
+                <input
+                    type = "text"
+                    name = "userName"
+                    placeholder = "Escribe tu nombre de usuario"
+                    required
+                />
                 <input 
-                    type="email"
+                    type = "email"
                     id = "email"
                     name = "email"
                     placeholder="Ingresa tu correo electrónico"
@@ -14,7 +20,7 @@ const Register = {
                     type = "password"
                     id = "password" 
                     name = "password" 
-                    placeholder = "contraseña (mayor o igual a 6 caracteres)"
+                    placeholder = "Contraseña (mayor o igual a 6 caracteres)"
                     required
                 />
                 <input 
@@ -29,35 +35,39 @@ const Register = {
         const formRegister = document.forms.formRegister;
         formRegister.addEventListener("submit", () => {
             event.preventDefault();
-            firebase.auth()
-                .createUserWithEmailAndPassword(
-                    formRegister["email"].value, formRegister["password"].value)
-                .then(
-                    () => {
-                        console.log("BIENVENIDO");
-                        //console.log(auth.UserCredential);
-                        //toogleModal();
-                        alert("¡Bienvenido, gracias por registrarte!. \nAhora inicia sesión con tu cuenta");
-                    }
-                )
-                .catch(
-                    error => {
-                        const errorCode = error.code;
-                        const errorMessage = error.message;
-                        console.log(errorCode,"|",errorMessage);
-                        if (errorCode == "auth/weak-password") {
-                            alert("La contraseña debe ser de al menos 6 caracteres");
-                        }
-                        else if (errorCode == "auth/email-already-in-use") {
-                            alert("La dirección de correo ya está registrada");
-                        }
-                        else{
-                            alert(errorMessage);
-                        }       
-                    }
-                );
-            }
-        );
+            let auth = firebase.auth();
+            auth.createUserWithEmailAndPassword(formRegister["email"].value, formRegister["password"].value)
+            .then(() => {
+                console.log("BIENVENIDO");
+                //toogleModal();
+                //alert("¡Bienvenido, gracias por registrarte!. \nAhora inicia sesión con tu cuenta");
+                //console.log(firebase.auth());
+            })
+            .catch(error => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode,"|",errorMessage);
+                if (errorCode == "auth/weak-password") {
+                    alert("La contraseña debe ser de al menos 6 caracteres");
+                }
+                else if (errorCode == "auth/email-already-in-use") {
+                    alert("La dirección de correo ya está registrada");
+                }
+                else{
+                    alert(errorMessage);
+                }       
+            });
+            auth.signOut();
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    // User is signed in.
+                    console.log("User is signed in");
+                } else {
+                    // No user is signed in.
+                    console.log("No user is signed in");
+                }
+            });
+        });
     }
 }
 export default Register;

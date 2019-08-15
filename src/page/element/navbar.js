@@ -3,7 +3,7 @@ let Navbar = {
         let view = /*html*/`
             <nav>
                 <a href = "./#/">TOGETHER-CLICK</a><br>
-                <a href = "./#/login">Incia sesión</a>
+                <a href = "./#/login">Inicia sesión</a>
                 <a href = "./#/register"> Crea tu cuenta</a>
             </nav>
         `
