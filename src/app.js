@@ -15,21 +15,20 @@ import Utils from './lib/utils.js'
 
 // List of supported routes. 
 // Any url other than these routes will throw a 404 error
-const routes = {
-    '/'          : Home
-    ,'/login'    : Login
-    ,'/register' : Register
-    ,'/userprofile' : UserProfile
-    ,'/userhome' : UserHome
-};
+let routes = {};
 
 // Router takes a URL, checks against the list of supported routes and then renders the corresponding content page
 const router = async () => { // function always returns a promise
 
     firebase.auth().onAuthStateChanged(user => {
+        // set an observer on the Auth object
         console.log(window.user);
         if (user) {
             // User is signed in.
+            routes = {
+                '/userprofile' : UserProfile
+                ,'/userhome' : UserHome
+            };
             console.log("User is signed in");
             const displayName = user.displayName;
             const email = user.email;
@@ -42,7 +41,11 @@ const router = async () => { // function always returns a promise
         } else {
             // No user is signed in.
             console.log("No user is signed in");
-            
+            routes = {
+                '/'          : Home
+                ,'/login'    : Login
+                ,'/register' : Register
+            };
         }
     });
 

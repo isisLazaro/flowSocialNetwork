@@ -3,12 +3,6 @@ const Register = {
         const view = /*html*/ `
             <h1>REGISTRO</h1>
             <form name = "formRegister">
-                <input
-                    type = "text"
-                    name = "userName"
-                    placeholder = "Escribe tu nombre de usuario"
-                    required
-                />
                 <input 
                     type = "email"
                     id = "email"
