@@ -30,7 +30,7 @@ const uiConfig = {
     ],
     credentialHelper: 'none',
     callbacks: {
-        signInSuccessWithAuthResult:function (authResult, redirectUrl) {
+        signInSuccessWithAuthResult : function (authResult, redirectUrl) {
             const usuario = {
                 uid     : authResult.user.uid,
                 nombre  : authResult.user.displayName,
