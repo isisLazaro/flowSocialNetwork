@@ -31,8 +31,8 @@ const Register = {
             event.preventDefault();
             let auth = firebase.auth();
             auth.createUserWithEmailAndPassword(formRegister["email"].value, formRegister["password"].value)
-            .then(() => {
-                console.log("BIENVENIDO");
+            .then(result => {
+                console.log(result.user);
                 //toogleModal();
                 //alert("¡Bienvenido, gracias por registrarte!. \nAhora inicia sesión con tu cuenta");
                 //console.log(firebase.auth());

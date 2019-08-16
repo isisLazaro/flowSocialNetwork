@@ -23,7 +23,8 @@ const Utils = {
     //  Simple sleep implementation
     // --------------------------------
     , sleep: (ms) => {
-        return new Promise(resolve => setTimeout(resolve, ms)); // represents the eventual completion (or failure) of an asynchronous operation, and its resulting value
+        return new Promise(resolve => setTimeout(resolve, ms)); 
+        // represents the eventual completion (or failure) of an asynchronous operation, and its resulting value
     }
 }
 
