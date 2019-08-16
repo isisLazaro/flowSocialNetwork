@@ -5,6 +5,7 @@ let UserHome = {
             <h1>USER HOME</h1>
             <p id = "userName"></p>
             <img id = "userPhoto"/>
+            <button id = "logout">Cerrar Sesión</button>
         `
         return view
     }
@@ -14,6 +15,10 @@ let UserHome = {
               // User is signed in.
               document.getElementById("userName").innerHTML = `Hola ${user.displayName}`;
               document.getElementById("userPhoto").src = user.photoURL;
+              document.getElementById("logout").addEventListener("click", () => {
+                firebase.auth().signOut();
+                window.location = '#/';
+              })
             } else {
               // No user is signed in.
             }

@@ -14,15 +14,36 @@ const db = firebase.firestore();
 
 // FirebaseUI config.
 const uiConfig = {
-    // signInSuccessUrl: 'loggedin.html',
-    signInSuccessUrl: '#/userHome',
     signInOptions: [
-    // Leave the lines as is for the providers you want to offer your users.
-    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-    firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-    firebase.auth.EmailAuthProvider.PROVIDER_ID
+        // Leave the lines as is for the providers you want to offer your users.
+        {provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+            requireDisplayName: false},
+        {
+            provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+            //scopes: ['https://www.googleapis.com/auth/contacts.readonly'],
+            customParameters: {
+                // Forces account selection even when one accountis available.
+                prompt: 'select_account'
+            }
+        },
+        firebase.auth.FacebookAuthProvider.PROVIDER_ID,
     ],
-    credentialHelper: 'none'
+    credentialHelper: 'none',
+    callbacks: {
+        signInSuccessWithAuthResult:function (authResult, redirectUrl) {
+            const usuario = {
+                uid    : authResult.user.uid,
+                nombre : authResult.user.displayName,
+                email  : authResult.user.email,
+                foto   : authResult.user.photoURL
+            }
+            db.collection("usuarios").doc(authResult.user.uid).set(usuario)
+            console.log(usuario);
+            //console.log(authResult.additionalUserInfo);
+            return true
+        }
+    },
+    signInSuccessUrl: '#/userHome'
     // tosUrl and privacyPolicyUrl accept either url string or a callback
     // function.
     // Terms of service url/callback.
@@ -33,6 +54,15 @@ const uiConfig = {
     } */
 };
 
+const saveData = user => {
+    let usuario = {
+        uid    : user.uid,
+        nombre : user.displayName,
+        email  : user.email,
+        foto   : user.photoURL
+    }
+    db.collection(usuarios).doc(user.uid).set(usurario)
+}
 // Initialize the FirebaseUI Widget using Firebase.
 //const ui = firebaseui.auth.AuthUI(firebase.auth());
 // The start method will wait until the DOM is loaded.
