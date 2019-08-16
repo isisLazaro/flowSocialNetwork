@@ -32,14 +32,15 @@ const uiConfig = {
     callbacks: {
         signInSuccessWithAuthResult:function (authResult, redirectUrl) {
             const usuario = {
-                uid    : authResult.user.uid,
-                nombre : authResult.user.displayName,
-                email  : authResult.user.email,
-                foto   : authResult.user.photoURL
+                uid     : authResult.user.uid,
+                nombre  : authResult.user.displayName,
+                email   : authResult.user.email,
+                foto    : authResult.user.photoURL,
+                newUser : authResult.additionalUserInfo.isNewUser
             }
             db.collection("usuarios").doc(authResult.user.uid).set(usuario)
-            console.log(usuario);
-            //console.log(authResult.additionalUserInfo);
+           // console.log(usuario);
+            console.log(authResult.additionalUserInfo);
             return true
         }
     },
@@ -54,15 +55,6 @@ const uiConfig = {
     } */
 };
 
-const saveData = user => {
-    let usuario = {
-        uid    : user.uid,
-        nombre : user.displayName,
-        email  : user.email,
-        foto   : user.photoURL
-    }
-    db.collection(usuarios).doc(user.uid).set(usurario)
-}
 // Initialize the FirebaseUI Widget using Firebase.
 //const ui = firebaseui.auth.AuthUI(firebase.auth());
 // The start method will wait until the DOM is loaded.
