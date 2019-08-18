@@ -15,13 +15,13 @@ const db = firebase.firestore();
 // FirebaseUI config.
 const uiConfig = {
     signInOptions: [
-        // Leave the lines as is for the providers you want to offer your users.
+        // providers you want to offer your users.
         {provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
             requireDisplayName: false},
         {
-            provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-            //scopes: ['https://www.googleapis.com/auth/contacts.readonly'],
-            customParameters: {
+            provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID
+            // ,scopes: ['https://www.googleapis.com/auth/contacts.readonly']
+            ,customParameters: {
                 // Forces account selection even when one accountis available.
                 prompt: 'select_account'
             }
@@ -30,7 +30,7 @@ const uiConfig = {
     ],
     credentialHelper: 'none',
     callbacks: {
-        signInSuccessWithAuthResult : function (authResult, redirectUrl) {
+        signInSuccessWithAuthResult : (authResult, redirectUrl) => {
             const usuario = {
                 uid     : authResult.user.uid,
                 nombre  : authResult.user.displayName,
@@ -39,8 +39,8 @@ const uiConfig = {
                 newUser : authResult.additionalUserInfo.isNewUser
             }
             db.collection("usuarios").doc(authResult.user.uid).set(usuario)
-           // console.log(usuario);
-            console.log(authResult.additionalUserInfo);
+            console.log(usuario);
+            //console.log(authResult.additionalUserInfo);
             return true
         }
     },
@@ -54,11 +54,6 @@ const uiConfig = {
     window.location.assign('<your-privacy-policy-url>');
     } */
 };
-
-// Initialize the FirebaseUI Widget using Firebase.
-//const ui = firebaseui.auth.AuthUI(firebase.auth());
-// The start method will wait until the DOM is loaded.
-//ui.start('#firebaseui-auth-container', uiConfig);
 
 /*  firebase.auth().onAuthStateChanged(user => {
     console.log(window.user);
