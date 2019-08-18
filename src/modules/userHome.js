@@ -48,6 +48,7 @@ let UserHome = {
     const postForm    = document.getElementById("post-form");
     const postInput   = document.getElementById("post-input");
     const submitButton = document.getElementById("submit-button");
+    const postsBoard = document.getElementById("posts");
 
     const submitButtonFn = () => {
       if (postInput.value) {
@@ -82,6 +83,100 @@ let UserHome = {
         });
       }
     });
+    
+    const deletePost = id => {
+      const div = document.getElementBy(id);
+      // If an element for that message exists, delete it.
+      if (div) {
+        div.parentNode.removeChild(div);
+      }
+    }
+
+    const createAndInsertPost = (id, timestamp) => {
+      const container = document.createElement('div');
+      container.innerHTML = 
+        '<div class="message-container">' +
+          '<div class="spacing"><div class="pic"></div></div>' +
+          '<div class="message"></div>' +
+          '<div class="name"></div>' +
+        '</div>';
+      const div = container.firstChild;
+      div.setAttribute('id', id);
+
+      // If timestamp is null, assume it's a brand new message.
+      timestamp = timestamp ? timestamp.toMillis() : Date.now();
+      div.setAttribute('timestamp', timestamp);
+
+      // figure out where to insert new message CHECK
+      const existingMessages = postsBoard.children;
+      if (existingMessages.length === 0) {
+        postsBoard.appendChild(div);
+      } else {
+        let messageListNode = existingMessages[0];
+
+        while (messageListNode) {
+          const messageListNodeTime = messageListNode.getAttribute('timestamp');
+
+          if (!messageListNodeTime) {
+            throw new Error(
+              `Child ${messageListNode.id} has no 'timestamp' attribute`
+            );
+          }
+
+          if (messageListNodeTime > timestamp) {
+            break;
+          }
+
+          messageListNode = messageListNode.nextSibling;
+        }
+
+        postsBoard.insertBefore(div, messageListNode);
+      }
+
+      return div;
+    } 
+
+    // Displays a post in the UI.
+    const displayPost = (id, timestamp, name, text, picUrl, imageUrl) => {
+      const div = document.getElementById(id) || createAndInsertPost(id, timestamp);
+      div.querySelector('.name').textContent = name;
+      let messageElement = div.querySelector('.message');
+      
+      // message is text.
+      messageElement.textContent = text;
+      // Replace all line breaks by <br>.
+      messageElement.innerHTML = messageElement.innerHTML.replace(/\n/g, '<br>');
+      // Show the card fading-in and scroll to view the new message.
+      setTimeout(() => {div.classList.add('visible')}, 1);
+      postsBoard.scrollTop = postsBoard.scrollHeight;
+      postsBoard.focus();
+    }
+
+    const loadPosts = () => { 
+      // Loads posts history and listens for upcoming ones.
+      
+      // Create the query to load the last 20 posts listen for new ones.
+      const query = firebase.firestore()
+      .collection('posts')
+      .orderBy('timestamp', 'desc')
+      .limit(20);  
+    
+      // Start listening to the query.
+      query.onSnapshot(snapshot => {
+        snapshot.docChanges().forEach(change => {
+          if (change.type === 'removed') {
+            deletePost(change.doc.id);
+          } else {
+            var message = change.doc.data();
+            displayPost(change.doc.id, message.timestamp, message.name,
+                          message.text, message.profilePicUrl, message.imageUrl);
+                          //TODO:
+          }
+        });
+      });
+    }
+
+    loadPosts();
   }
 }
 export default UserHome;
